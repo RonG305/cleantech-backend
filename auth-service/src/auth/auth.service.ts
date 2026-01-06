@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { CreateAuthDto, CreateUserProfileDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import {JwtService} from '@nestjs/jwt'
+import { GetUserProfileDto } from './dto/get-user-profile.dto';
+import { UpdateUserProfileDto } from './dto/update-profile.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,37 +35,56 @@ export class AuthService {
     return user;
   }
 
-  async signIn (email: string, password: string): Promise<{ accessToken: string, roles: string[] }> {
+  async signIn (email: string, password: string): Promise<{ accessToken: string, roles: string[], user_id: string }> {
     const user = await this.prisma.user.findUnique({where: {email}});
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new UnauthorizedException('User with email not found');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw new Error('Invalid credentials');
+      throw new UnauthorizedException('Invalid password');
     }
 
     const payload = { sub: user.id, email: user.email, roles: user.roles };
     const accessToken = this.jwtService.sign(payload);
 
-    return { accessToken, roles: user.roles };
+    return { accessToken, roles: user.roles, user_id: user.id  };
 
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async createUserProfile(createUserProfileDto: CreateUserProfileDto) {
+    const user_profile = await this.prisma.userProfile.create({
+      data: createUserProfileDto,
+    })
+    return user_profile;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  async getAllUserProfiles() {
+    const profiles = await this.prisma.userProfile.findMany();
+    return profiles;
   }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
+  async getUserProfile(id: string): Promise<any> {
+    console.log('Fetching profile for user ID:', id);
+    const profile = await this.prisma.userProfile.findUnique({
+      where: { user_id: id },
+    });
+    return profile;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async updateUserProfile(id: string, updateUserProfile: UpdateUserProfileDto) {
+    const updatedProfile = await this.prisma.userProfile.update({
+      where: { user_id: id },
+      data: updateUserProfile,
+    });
+    return updatedProfile;
+  }
+
+  async deleteUserProfile(id: string) {
+    const deletedProfile = await this.prisma.userProfile.delete({
+      where: { user_id: id },
+    });
+    return deletedProfile;
   }
 }

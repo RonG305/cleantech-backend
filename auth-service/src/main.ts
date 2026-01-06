@@ -12,28 +12,34 @@ async function bootstrap() {
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
-  })
+  });
 
-   const config = new DocumentBuilder()
+  const config = new DocumentBuilder()
     .setTitle('Cleantech authservice backend')
     .setDescription('Cleantech authservice backend API documentation')
     .setVersion('1.0')
     .addTag('authservice')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'jwt-auth',
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/v1/auth-service/docs', app, documentFactory);
 
-    await app.listen(4001, '0.0.0.0');
+  await app.listen(4001, '0.0.0.0');
 
-    console.log(
-  'DATABASE_URL runtime value:',
-  process.env.DATABASE_URL,
-  typeof process.env.DATABASE_URL,
-  typeof process.env.JWT_SECRET
-);
-
-
-  console.log(`Application is running on: ${await app.getUrl()}/api/v1/auth-service`);
-  console.log(`Swagger is running on: ${await app.getUrl()}/api/v1/auth-service/docs`);
+  console.log(
+    `Application is running on: ${await app.getUrl()}/api/v1/auth-service`,
+  );
+  console.log(
+    `Swagger is running on: ${await app.getUrl()}/api/v1/auth-service/docs`,
+  );
 }
 bootstrap();

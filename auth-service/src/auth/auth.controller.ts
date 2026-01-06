@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { CreateAuthDto, CreateUserProfileDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { LoginDto } from './dto/login-auth.dto';
+import { AuthGuard } from './auth.gurads';
+import { UpdateUserProfileDto } from './dto/update-profile.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,23 +20,31 @@ export class AuthController {
     return this.authService.signIn(body.email, body.password);
   }
 
-  @Get()
+  @HttpCode(HttpStatus.OK)
+  @Post('create-profile')
+  @UseGuards(AuthGuard)
+  createUserProfile(@Body() createUserProfileDto: CreateUserProfileDto) {
+    return this.authService.createUserProfile(createUserProfileDto);
+  }
+
+  @Get('profiles')
   findAll() {
-    return this.authService.findAll();
+    return this.authService.getAllUserProfiles();
   }
 
-  @Get(':id')
+  @UseGuards(AuthGuard)
+  @Get('profile/:id')
   findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+    return this.authService.getUserProfile(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
+  @Patch('profile/:id')
+  updateProfile(@Param('id') id: string, @Body() updateUserProfileDto: UpdateUserProfileDto) {
+    return this.authService.updateUserProfile(id, updateUserProfileDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Delete('profile/:id')
+  deleteProfile(@Param('id') id: string) {
+    return this.authService.deleteUserProfile(id);
   }
 }

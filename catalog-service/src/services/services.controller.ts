@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { GetServiceDto } from './dto/get-services.dto';
+import { AuthGuard } from 'src/auth.gurads';
 
 @Controller('services')
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   create(@Body() createServiceDto: CreateServiceDto) {
     return this.servicesService.createService(createServiceDto);
@@ -28,6 +30,7 @@ export class ServicesController {
     return this.servicesService.updateService(id, updateServiceDto);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.servicesService.deleteService(id);

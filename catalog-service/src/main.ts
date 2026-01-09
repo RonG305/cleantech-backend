@@ -16,9 +16,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Cleantech catalogservice backend')
-    .setDescription('Cleantech catalogservice backend API documentation')
+    .setDescription('Cleantech catalog service backend API documentation')
     .setVersion('1.0')
-    .addTag('catalogservice')
+    .addTag('catalog service')
     .addBearerAuth(
       {
         type: 'http',

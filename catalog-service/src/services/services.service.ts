@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { GetServiceDto } from './dto/get-services.dto';
+import { paginate } from 'src/common/pagination/paginate';
+import Fuse from 'fuse.js';
 
 @Injectable()
 export class ServicesService {
@@ -13,19 +16,63 @@ export class ServicesService {
     return service;
   }
 
-  findAll() {
-    return `This action returns all services`;
+   async getAllServices({ search, limit, page }: GetServiceDto): Promise<any> {
+    if (!page) page = 1;
+    if (!limit) limit = 10;
+
+    const totalServices = await this.prisma.service.count();
+    const totalPages = Math.ceil(totalServices / limit);
+    const url = 'services';
+
+    const pagination = paginate(totalPages, page, limit, totalServices, url);
+    const services = await this.prisma.service.findMany({
+      skip: Number((page - 1) * limit),
+      take: Number(limit),
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const options = {
+      keys: ['name', "description"],
+      threshold: 0.3,
+    };
+
+    const fuse = new Fuse(services, options);
+    if (search) {
+      const result = fuse.search(search);
+      const filteredServices = result.map((service) => service.item);
+      return {
+        data: filteredServices,
+        ...pagination,
+      };
+    }
+
+    return {
+      data: services,
+      ...pagination,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} service`;
+  async getServiceById(id: string) {
+     const service = await this.prisma.service.findUnique({
+      where: { id },
+    });
+    return service;
   }
 
-  update(id: number, updateServiceDto: UpdateServiceDto) {
-    return `This action updates a #${id} service`;
+  async updateService(id: string, updateServiceDto: UpdateServiceDto) {
+    const service = await this.prisma.service.update({
+      where: { id },
+      data: updateServiceDto,
+    });
+    return service;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} service`;
+  async deleteService(id: string) {
+    const service = await this.prisma.service.delete({
+      where: { id },
+    });
+    return service;
   }
 }

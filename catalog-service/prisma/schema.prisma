@@ -32,7 +32,7 @@ model Service {
   category_id String
   name        String
   description String?
-  price       Float
+  base_price       Float
   duration    Int?
   is_active   Boolean  @default(false)
   createdAt   DateTime @default(now())

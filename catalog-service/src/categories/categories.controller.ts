@@ -25,11 +25,13 @@ export class CategoriesController {
     return this.categoriesService.getCategoryById(id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
     return this.categoriesService.updateCategory(id, updateCategoryDto);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.categoriesService.deleteCategory(id);

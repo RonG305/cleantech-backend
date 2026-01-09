@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto, CreateUserProfileDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { LoginDto } from './dto/login-auth.dto';
 import { AuthGuard } from './auth.gurads';
 import { UpdateUserProfileDto } from './dto/update-profile.dto';
+import { GetUsersDto } from './dto/get-users.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -13,6 +14,12 @@ export class AuthController {
   @Post('create-user')
   create(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.createUser(createAuthDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('users')
+  getAllUsers(@Query() getUsersDto: GetUsersDto) {
+    return this.authService.getAllUsers(getUsersDto);
   }
 
   @Post('login')

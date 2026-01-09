@@ -9,11 +9,23 @@ export enum Gender {
     OTHER = 'OTHER',
 }
 
+export enum AccountType {
+    INDIVIDUAL = 'INDIVIDUAL',
+    COMPANY = 'COMPANY',
+}
+
 export enum Role {
     CUSTOMER = 'CUSTOMER',
     ADMIN = 'ADMIN',
-    CLEANER = 'CLEANER',
+    PROVIDER = 'PROVIDER',
 }
+
+export enum Status {
+    ACTIVE = 'ACTIVE',
+    INACTIVE = 'INACTIVE',
+    SUSPENDED = 'SUSPENDED',
+}
+
 
 export class CreateAuthDto {
     @ApiProperty({example: 'customer@example.com'})
@@ -28,6 +40,31 @@ export class CreateAuthDto {
     @IsOptional()
     @IsString({ each: true })
     roles: Role[];
+
+    @ApiProperty({example: AccountType.INDIVIDUAL, enum: AccountType, required: false})
+    @IsOptional()
+    @IsString()
+    account_type?: AccountType;
+
+    @ApiProperty({example: 'Clean tech Ltd.', required: false})
+    @IsOptional()
+    @IsString()
+    company_name?: string;
+
+    @ApiProperty({example: 'https://cleantechnest.com', required: false})
+    @IsOptional()
+    @IsString()
+    company_website?: string;
+
+    @ApiProperty({example: 'REG-123456', required: false})
+    @IsOptional()
+    @IsString()
+    company_registration_number?: string;
+
+    @ApiProperty({example: Status.ACTIVE, enum: Status, required: false})
+    @IsOptional()
+    @IsString()
+    status?: Status;
 }
 
 

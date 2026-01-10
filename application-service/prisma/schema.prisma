@@ -33,7 +33,7 @@ model ServiceRequests {
   service_id  String
   user_id    String
   provider_id String?
-  services    Json?
+  services    Json[]
   status     ServiceStatus   @default(pending)
   frequency  ServiceFrequency?
   scheduled_at DateTime?

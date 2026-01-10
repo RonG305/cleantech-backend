@@ -14,13 +14,28 @@ datasource db {
   provider = "postgresql"
 }
 
+enum ServiceStatus {
+  pending
+  in_progress
+  completed
+  cancelled
+}
+
+enum ServiceFrequency {
+  one_time
+  weekly
+  bi_weekly
+  monthly
+}
+
 model ServiceRequests {
   id         String   @id @default(cuid())
   service_id  String
   user_id    String
   provider_id String?
   services    Json?
-  status     String   @default("pending")
+  status     ServiceStatus   @default(pending)
+  frequency  ServiceFrequency?
   scheduled_at DateTime?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

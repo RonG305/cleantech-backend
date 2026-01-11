@@ -82,11 +82,10 @@ async getAllServiceRequests({ search, limit, page }: GetServiceRequestDto, user:
     const url = 'service-requests/my-requests';
 
     const pagination = paginate(totalPages, page, limit, totalServiceRequests, url);
-
     const serviceRequests = await this.prisma.serviceRequests.findMany({
+      where: { user_id: user.sub },
       skip: Number((page - 1) * limit),
       take: Number(limit),
-      where: { user_id: user.id },
       orderBy: {
         createdAt: 'desc',
       },

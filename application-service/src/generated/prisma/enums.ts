@@ -9,7 +9,21 @@
 * 🟢 You can import this file directly.
 */
 
+export const ServiceStatus = {
+  pending: 'pending',
+  in_progress: 'in_progress',
+  completed: 'completed',
+  cancelled: 'cancelled'
+} as const
+
+export type ServiceStatus = (typeof ServiceStatus)[keyof typeof ServiceStatus]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const ServiceFrequency = {
+  one_time: 'one_time',
+  weekly: 'weekly',
+  bi_weekly: 'bi_weekly',
+  monthly: 'monthly'
+} as const
+
+export type ServiceFrequency = (typeof ServiceFrequency)[keyof typeof ServiceFrequency]

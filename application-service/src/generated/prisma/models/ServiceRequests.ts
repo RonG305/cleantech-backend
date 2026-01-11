@@ -29,8 +29,8 @@ export type ServiceRequestsMinAggregateOutputType = {
   service_id: string | null
   user_id: string | null
   provider_id: string | null
-  status: string | null
-  frequency: string | null
+  status: $Enums.ServiceStatus | null
+  frequency: $Enums.ServiceFrequency | null
   scheduled_at: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -41,8 +41,8 @@ export type ServiceRequestsMaxAggregateOutputType = {
   service_id: string | null
   user_id: string | null
   provider_id: string | null
-  status: string | null
-  frequency: string | null
+  status: $Enums.ServiceStatus | null
+  frequency: $Enums.ServiceFrequency | null
   scheduled_at: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -178,9 +178,9 @@ export type ServiceRequestsGroupByOutputType = {
   service_id: string
   user_id: string
   provider_id: string | null
-  services: runtime.JsonValue | null
-  status: string
-  frequency: string | null
+  services: runtime.JsonValue[]
+  status: $Enums.ServiceStatus
+  frequency: $Enums.ServiceFrequency | null
   scheduled_at: Date | null
   createdAt: Date
   updatedAt: Date
@@ -212,9 +212,9 @@ export type ServiceRequestsWhereInput = {
   service_id?: Prisma.StringFilter<"ServiceRequests"> | string
   user_id?: Prisma.StringFilter<"ServiceRequests"> | string
   provider_id?: Prisma.StringNullableFilter<"ServiceRequests"> | string | null
-  services?: Prisma.JsonNullableFilter<"ServiceRequests">
-  status?: Prisma.StringFilter<"ServiceRequests"> | string
-  frequency?: Prisma.StringNullableFilter<"ServiceRequests"> | string | null
+  services?: Prisma.JsonNullableListFilter<"ServiceRequests">
+  status?: Prisma.EnumServiceStatusFilter<"ServiceRequests"> | $Enums.ServiceStatus
+  frequency?: Prisma.EnumServiceFrequencyNullableFilter<"ServiceRequests"> | $Enums.ServiceFrequency | null
   scheduled_at?: Prisma.DateTimeNullableFilter<"ServiceRequests"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"ServiceRequests"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ServiceRequests"> | Date | string
@@ -225,7 +225,7 @@ export type ServiceRequestsOrderByWithRelationInput = {
   service_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   provider_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  services?: Prisma.SortOrderInput | Prisma.SortOrder
+  services?: Prisma.SortOrder
   status?: Prisma.SortOrder
   frequency?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduled_at?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -241,9 +241,9 @@ export type ServiceRequestsWhereUniqueInput = Prisma.AtLeast<{
   service_id?: Prisma.StringFilter<"ServiceRequests"> | string
   user_id?: Prisma.StringFilter<"ServiceRequests"> | string
   provider_id?: Prisma.StringNullableFilter<"ServiceRequests"> | string | null
-  services?: Prisma.JsonNullableFilter<"ServiceRequests">
-  status?: Prisma.StringFilter<"ServiceRequests"> | string
-  frequency?: Prisma.StringNullableFilter<"ServiceRequests"> | string | null
+  services?: Prisma.JsonNullableListFilter<"ServiceRequests">
+  status?: Prisma.EnumServiceStatusFilter<"ServiceRequests"> | $Enums.ServiceStatus
+  frequency?: Prisma.EnumServiceFrequencyNullableFilter<"ServiceRequests"> | $Enums.ServiceFrequency | null
   scheduled_at?: Prisma.DateTimeNullableFilter<"ServiceRequests"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"ServiceRequests"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ServiceRequests"> | Date | string
@@ -254,7 +254,7 @@ export type ServiceRequestsOrderByWithAggregationInput = {
   service_id?: Prisma.SortOrder
   user_id?: Prisma.SortOrder
   provider_id?: Prisma.SortOrderInput | Prisma.SortOrder
-  services?: Prisma.SortOrderInput | Prisma.SortOrder
+  services?: Prisma.SortOrder
   status?: Prisma.SortOrder
   frequency?: Prisma.SortOrderInput | Prisma.SortOrder
   scheduled_at?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -273,9 +273,9 @@ export type ServiceRequestsScalarWhereWithAggregatesInput = {
   service_id?: Prisma.StringWithAggregatesFilter<"ServiceRequests"> | string
   user_id?: Prisma.StringWithAggregatesFilter<"ServiceRequests"> | string
   provider_id?: Prisma.StringNullableWithAggregatesFilter<"ServiceRequests"> | string | null
-  services?: Prisma.JsonNullableWithAggregatesFilter<"ServiceRequests">
-  status?: Prisma.StringWithAggregatesFilter<"ServiceRequests"> | string
-  frequency?: Prisma.StringNullableWithAggregatesFilter<"ServiceRequests"> | string | null
+  services?: Prisma.JsonNullableListFilter<"ServiceRequests">
+  status?: Prisma.EnumServiceStatusWithAggregatesFilter<"ServiceRequests"> | $Enums.ServiceStatus
+  frequency?: Prisma.EnumServiceFrequencyNullableWithAggregatesFilter<"ServiceRequests"> | $Enums.ServiceFrequency | null
   scheduled_at?: Prisma.DateTimeNullableWithAggregatesFilter<"ServiceRequests"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ServiceRequests"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ServiceRequests"> | Date | string
@@ -286,9 +286,9 @@ export type ServiceRequestsCreateInput = {
   service_id: string
   user_id: string
   provider_id?: string | null
-  services?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  status?: string
-  frequency?: string | null
+  services?: Prisma.ServiceRequestsCreateservicesInput | runtime.InputJsonValue[]
+  status?: $Enums.ServiceStatus
+  frequency?: $Enums.ServiceFrequency | null
   scheduled_at?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -299,9 +299,9 @@ export type ServiceRequestsUncheckedCreateInput = {
   service_id: string
   user_id: string
   provider_id?: string | null
-  services?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  status?: string
-  frequency?: string | null
+  services?: Prisma.ServiceRequestsCreateservicesInput | runtime.InputJsonValue[]
+  status?: $Enums.ServiceStatus
+  frequency?: $Enums.ServiceFrequency | null
   scheduled_at?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -312,9 +312,9 @@ export type ServiceRequestsUpdateInput = {
   service_id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   provider_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  services?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  services?: Prisma.ServiceRequestsUpdateservicesInput | runtime.InputJsonValue[]
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  frequency?: Prisma.NullableEnumServiceFrequencyFieldUpdateOperationsInput | $Enums.ServiceFrequency | null
   scheduled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -325,9 +325,9 @@ export type ServiceRequestsUncheckedUpdateInput = {
   service_id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   provider_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  services?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  services?: Prisma.ServiceRequestsUpdateservicesInput | runtime.InputJsonValue[]
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  frequency?: Prisma.NullableEnumServiceFrequencyFieldUpdateOperationsInput | $Enums.ServiceFrequency | null
   scheduled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -338,9 +338,9 @@ export type ServiceRequestsCreateManyInput = {
   service_id: string
   user_id: string
   provider_id?: string | null
-  services?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  status?: string
-  frequency?: string | null
+  services?: Prisma.ServiceRequestsCreateservicesInput | runtime.InputJsonValue[]
+  status?: $Enums.ServiceStatus
+  frequency?: $Enums.ServiceFrequency | null
   scheduled_at?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -351,9 +351,9 @@ export type ServiceRequestsUpdateManyMutationInput = {
   service_id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   provider_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  services?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  services?: Prisma.ServiceRequestsUpdateservicesInput | runtime.InputJsonValue[]
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  frequency?: Prisma.NullableEnumServiceFrequencyFieldUpdateOperationsInput | $Enums.ServiceFrequency | null
   scheduled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -364,12 +364,27 @@ export type ServiceRequestsUncheckedUpdateManyInput = {
   service_id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.StringFieldUpdateOperationsInput | string
   provider_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  services?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  frequency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  services?: Prisma.ServiceRequestsUpdateservicesInput | runtime.InputJsonValue[]
+  status?: Prisma.EnumServiceStatusFieldUpdateOperationsInput | $Enums.ServiceStatus
+  frequency?: Prisma.NullableEnumServiceFrequencyFieldUpdateOperationsInput | $Enums.ServiceFrequency | null
   scheduled_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type JsonNullableListFilter<$PrismaModel = never> =
+| Prisma.PatchUndefined<
+    Prisma.Either<Required<JsonNullableListFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableListFilterBase<$PrismaModel>>, 'path'>>,
+    Required<JsonNullableListFilterBase<$PrismaModel>>
+  >
+| Prisma.OptionalFlat<Omit<Required<JsonNullableListFilterBase<$PrismaModel>>, 'path'>>
+
+export type JsonNullableListFilterBase<$PrismaModel = never> = {
+  equals?: runtime.InputJsonValue[] | Prisma.ListJsonFieldRefInput<$PrismaModel> | null
+  has?: runtime.InputJsonValue | Prisma.JsonFieldRefInput<$PrismaModel> | null
+  hasEvery?: runtime.InputJsonValue[] | Prisma.ListJsonFieldRefInput<$PrismaModel>
+  hasSome?: runtime.InputJsonValue[] | Prisma.ListJsonFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
 }
 
 export type ServiceRequestsCountOrderByAggregateInput = {
@@ -409,12 +424,29 @@ export type ServiceRequestsMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type ServiceRequestsCreateservicesInput = {
+  set: runtime.InputJsonValue[]
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type ServiceRequestsUpdateservicesInput = {
+  set?: runtime.InputJsonValue[]
+  push?: runtime.InputJsonValue | runtime.InputJsonValue[]
+}
+
+export type EnumServiceStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ServiceStatus
+}
+
+export type NullableEnumServiceFrequencyFieldUpdateOperationsInput = {
+  set?: $Enums.ServiceFrequency | null
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -489,9 +521,9 @@ export type $ServiceRequestsPayload<ExtArgs extends runtime.Types.Extensions.Int
     service_id: string
     user_id: string
     provider_id: string | null
-    services: runtime.JsonValue | null
-    status: string
-    frequency: string | null
+    services: runtime.JsonValue[]
+    status: $Enums.ServiceStatus
+    frequency: $Enums.ServiceFrequency | null
     scheduled_at: Date | null
     createdAt: Date
     updatedAt: Date
@@ -922,9 +954,9 @@ export interface ServiceRequestsFieldRefs {
   readonly service_id: Prisma.FieldRef<"ServiceRequests", 'String'>
   readonly user_id: Prisma.FieldRef<"ServiceRequests", 'String'>
   readonly provider_id: Prisma.FieldRef<"ServiceRequests", 'String'>
-  readonly services: Prisma.FieldRef<"ServiceRequests", 'Json'>
-  readonly status: Prisma.FieldRef<"ServiceRequests", 'String'>
-  readonly frequency: Prisma.FieldRef<"ServiceRequests", 'String'>
+  readonly services: Prisma.FieldRef<"ServiceRequests", 'Json[]'>
+  readonly status: Prisma.FieldRef<"ServiceRequests", 'ServiceStatus'>
+  readonly frequency: Prisma.FieldRef<"ServiceRequests", 'ServiceFrequency'>
   readonly scheduled_at: Prisma.FieldRef<"ServiceRequests", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"ServiceRequests", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ServiceRequests", 'DateTime'>

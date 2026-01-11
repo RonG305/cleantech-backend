@@ -9,9 +9,9 @@ enum ServiceRequestStatus {
 }
 
 enum ServiceFrequency {
-    ONE_TIME = 'one-time',
+    ONE_TIME = 'one_time',
     WEEKLY = 'weekly',
-    BI_WEEKLY = 'bi-weekly',
+    BI_WEEKLY = 'bi_weekly',
     MONTHLY = 'monthly',
 }
 
@@ -33,7 +33,7 @@ export class CreateServiceRequestDto {
             description: 'Additional services or options in JSON format (optional)' 
         })
     @IsArray()
-    services?: Record<string, any>[];
+    services?: any[];
 
     @ApiProperty({ example: 'pending', description: 'Status of the service request' })
     @IsEnum(ServiceRequestStatus)

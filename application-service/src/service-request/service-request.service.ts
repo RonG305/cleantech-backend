@@ -5,26 +5,39 @@ import { UpdateServiceRequestDto } from './dto/update-service-request.dto';
 import { GetServiceRequestDto } from './dto/get-service-request.dto';
 import { paginate } from 'src/common/pagination/paginate';
 import Fuse from 'fuse.js';
+import { JwtService } from '@nestjs/jwt';
+import { ServiceRequest } from './types';
 
 @Injectable()
 export class ServiceRequestService {
 
   private readonly logger = new Logger(ServiceRequestService.name);
 
+  async getLoggedInUserIdFromToken(token: string): Promise<string | null> {
+    try {
+      const jwtService = new JwtService();
+      const decodedToken = jwtService.decode(token) as { sub: string };
+      return decodedToken.sub;
+    } catch (error) {
+      this.logger.error('Failed to decode token', error);
+      return null;
+    }
+  }
+
   constructor(private readonly prisma: PrismaService) {}
-  async createServiceRequest(createServiceRequestDto: CreateServiceRequestDto) {
-    console.log('Creating service request with data:', createServiceRequestDto);
+  async createServiceRequest(createServiceRequestDto: CreateServiceRequestDto): Promise<any> {
+    this.logger.log('Creating service request with data:', createServiceRequestDto);
     const seervice_request = await this.prisma.serviceRequests.create({
-      data: createServiceRequestDto,
+      data: createServiceRequestDto as any,
     })
     return seervice_request;
   }
 
-async getAllServiceRequests({ search, limit, page }: GetServiceRequestDto) {
+async getAllServiceRequests({ search, limit, page }: GetServiceRequestDto, user: any) {
     if (!page) page = 1;
     if (!limit) limit = 10;
 
-    this.logger.log(`Fetching service requests - Page: ${page}, Limit: ${limit}, Search: ${search}`);
+    this.logger.log("User from token:", user);
 
     const totalServiceRequests = await this.prisma.serviceRequests.count();
     const totalPages = Math.ceil(totalServiceRequests / limit);
@@ -60,11 +73,11 @@ async getAllServiceRequests({ search, limit, page }: GetServiceRequestDto) {
     };
   }
 
-  async getMyServiceRequests(userId: string, { search, limit, page }: GetServiceRequestDto) {
+  async getMyServiceRequests({ search, limit, page }: GetServiceRequestDto, user: any) {
     if (!page) page = 1;
     if (!limit) limit = 10;
 
-    const totalServiceRequests = await this.prisma.serviceRequests.count({ where: { user_id: userId } });
+    const totalServiceRequests = await this.prisma.serviceRequests.count({ where: { user_id: user.id } });
     const totalPages = Math.ceil(totalServiceRequests / limit);
     const url = 'service-requests/my-requests';
 
@@ -73,7 +86,7 @@ async getAllServiceRequests({ search, limit, page }: GetServiceRequestDto) {
     const serviceRequests = await this.prisma.serviceRequests.findMany({
       skip: Number((page - 1) * limit),
       take: Number(limit),
-      where: { user_id: userId },
+      where: { user_id: user.id },
       orderBy: {
         createdAt: 'desc',
       },
@@ -93,6 +106,7 @@ async getAllServiceRequests({ search, limit, page }: GetServiceRequestDto) {
         ...pagination,
       };
     }
+
     return {
       data: serviceRequests,
       ...pagination,
@@ -132,6 +146,7 @@ async getAllServiceRequests({ search, limit, page }: GetServiceRequestDto) {
         ...pagination,
       };
     }
+
     return {
       data: serviceRequests,
       ...pagination,
@@ -148,7 +163,7 @@ async getAllServiceRequests({ search, limit, page }: GetServiceRequestDto) {
   async updateServiceRequest(id: string, updateServiceRequestDto: UpdateServiceRequestDto) {
     const serviceRequest = await this.prisma.serviceRequests.update({
       where: { id },
-      data: updateServiceRequestDto,
+      data: updateServiceRequestDto as any,
     });
     return serviceRequest;
   }

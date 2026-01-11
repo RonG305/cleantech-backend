@@ -4,11 +4,10 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 generator client {
-  provider        = "prisma-client"
-  output          = "../src/generated/prisma"
-  moduleFormat    = "cjs"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
-
 
 datasource db {
   provider = "postgresql"
@@ -29,14 +28,14 @@ enum ServiceFrequency {
 }
 
 model ServiceRequests {
-  id         String   @id @default(cuid())
-  service_id  String
-  user_id    String
-  provider_id String?
-  services    Json[]
-  status     ServiceStatus   @default(pending)
-  frequency  ServiceFrequency?
+  id           String            @id @default(cuid())
+  service_id   String
+  user_id      String
+  provider_id  String?
+  services     Json[]
+  status       ServiceStatus     @default(pending)
+  frequency    ServiceFrequency?
   scheduled_at DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
 }

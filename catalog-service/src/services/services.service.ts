@@ -9,9 +9,12 @@ import Fuse from 'fuse.js';
 @Injectable()
 export class ServicesService {
   constructor(private readonly prisma: PrismaService){}
-  async createService(createServiceDto: CreateServiceDto) {
+  async createService(createServiceDto: CreateServiceDto, user: any) {
     const service = await this.prisma.service.create({
-      data: createServiceDto,
+      data: {
+        ...createServiceDto,
+        provider_id: user.sub,
+      },
     });
     return service;
   }
@@ -26,6 +29,9 @@ export class ServicesService {
 
     const pagination = paginate(totalPages, page, limit, totalServices, url);
     const services = await this.prisma.service.findMany({
+      include: {
+        category: true,
+      },
       skip: Number((page - 1) * limit),
       take: Number(limit),
       orderBy: {

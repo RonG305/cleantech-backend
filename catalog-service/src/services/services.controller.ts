@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Req } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
@@ -11,8 +11,8 @@ export class ServicesController {
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createServiceDto: CreateServiceDto) {
-    return this.servicesService.createService(createServiceDto);
+  create(@Body() createServiceDto: CreateServiceDto, @Req() req) {
+    return this.servicesService.createService(createServiceDto, req.user);
   }
 
   @Get()

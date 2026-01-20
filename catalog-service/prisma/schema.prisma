@@ -33,6 +33,7 @@ model Service {
   description       String?
   base_price        Float
   duration          Int?
+  discount_percentage Float?                    @default(0)
   is_active         Boolean                   @default(false)
   createdAt         DateTime                  @default(now())
   updatedAt         DateTime                  @updatedAt

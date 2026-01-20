@@ -74,6 +74,7 @@ export class AuthService {
     const pagination = paginate(totalPages, page, limit, totalUsers, url);
     const users = await this.prisma.user.findMany({
       select: {
+        id: true,
         email: true,
         roles: true,
         account_type: true,

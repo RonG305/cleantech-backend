@@ -4,7 +4,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(
+    AppModule, 
+    { cors: true, logger: ['error', 'warn', 'log', 'debug', 'verbose'] }
+  );
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api/v1/auth-service');
   app.enableCors({
@@ -15,10 +18,10 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('Cleantech authservice backend')
-    .setDescription('Cleantech authservice backend API documentation')
+    .setTitle('Cleantech auth service backend')
+    .setDescription('Cleantech auth service backend API documentation')
     .setVersion('1.0')
-    .addTag('authservice')
+    .addTag('auth service')
     .addBearerAuth(
       {
         type: 'http',

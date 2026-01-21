@@ -7,6 +7,7 @@ import { UpdateUserProfileDto } from './dto/update-profile.dto';
 import { paginate } from 'src/common/pagination/paginate';
 import Fuse from 'fuse.js';
 import { GetUsersDto } from './dto/get-users.dto';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Injectable()
 export class AuthService {
@@ -112,6 +113,27 @@ export class AuthService {
       ...pagination,
     };
   }
+
+  @MessagePattern({cmd: 'get_user_by_id'})
+  async getUserById(id: string): Promise<any> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        roles: true,
+        account_type: true,
+        company_name: true,
+        company_website: true,
+        company_registration_number: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return user;
+  }
+
 
   async createUserProfile(createUserProfileDto: CreateUserProfileDto) {
     const user_profile = await this.prisma.userProfile.create({

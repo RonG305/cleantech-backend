@@ -11,6 +11,6 @@ export class PaginationDto {
    prevPageUrl: string | null;
    nextPageUrl: string | null;
    url?: string | null;
-   data?: any[] | null;
+   results?: any[] | null;
 
 }

@@ -49,16 +49,63 @@ export class ServicesService {
       const result = fuse.search(search);
       const filteredServices = result.map((service) => service.item);
       return {
-        data: filteredServices,
-        ...pagination,
+        results: filteredServices,
+        ...pagination
       };
     }
 
     return {
-      data: services,
+      
+      results: services,
       ...pagination,
     };
   }
+
+   async getAllProviderServices({ search, limit, page }: GetServiceDto, providerId: string): Promise<any> {
+    if (!page) page = 1;
+    if (!limit) limit = 10;
+
+    const totalServices = await this.prisma.service.count({
+      where: { provider_id: providerId },
+    });
+    const totalPages = Math.ceil(totalServices / limit);
+    const url = 'services';
+
+    const pagination = paginate(totalPages, page, limit, totalServices, url);
+    const services = await this.prisma.service.findMany({
+      where: { provider_id: providerId },
+      include: {
+        category: true,
+      },
+      skip: Number((page - 1) * limit),
+      take: Number(limit),
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const options = {
+      keys: ['name', "description"],
+      threshold: 0.3,
+    };
+
+    const fuse = new Fuse(services, options);
+    if (search) {
+      const result = fuse.search(search);
+      const filteredServices = result.map((service) => service.item);
+      return {
+        results: filteredServices,
+        ...pagination
+      };
+    }
+
+    return {
+      
+      results: services,
+      ...pagination,
+    };
+  }
+
 
   async getServiceById(id: string) {
      const service = await this.prisma.service.findUnique({

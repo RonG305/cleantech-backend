@@ -19,6 +19,12 @@ export class ServicesController {
   getAllServices(@Query() getServiceDto: GetServiceDto) {
     return this.servicesService.getAllServices(getServiceDto);
   }
+  
+  @UseGuards(AuthGuard)
+  @Get('provider')
+  getAllProviderServices(@Query() getServiceDto: GetServiceDto, @Req() req) {
+    return this.servicesService.getAllProviderServices(getServiceDto, req.user.sub);
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

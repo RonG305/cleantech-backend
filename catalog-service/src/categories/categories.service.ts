@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Category, CategoryResponse } from './types';
+import { Category } from './types';
 import { GetCategoryDto } from './dto/get-category.dto';
 import { paginate } from 'src/common/pagination/paginate';
 import Fuse from 'fuse.js';
@@ -45,13 +45,13 @@ export class CategoriesService {
       const result = fuse.search(search);
       const filteredCategories = result.map((category) => category.item);
       return {
-        data: filteredCategories,
+        results: filteredCategories,
         ...pagination,
       };
     }
 
     return {
-      data: categories,
+      results: categories,
       ...pagination,
     };
   }

@@ -16,6 +16,7 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
   });
+  
 
   const config = new DocumentBuilder()
     .setTitle('Cleantech auth service backend')

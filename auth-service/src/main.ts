@@ -5,7 +5,7 @@ import { AppModule } from './app.module.js';
 
 async function bootstrap() {
   const app = await NestFactory.create(
-    AppModule, 
+    AppModule,
     { cors: true, logger: ['error', 'warn', 'log', 'debug', 'verbose'] }
   );
   app.useGlobalPipes(new ValidationPipe());
@@ -16,7 +16,7 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
   });
-  
+
 
   const config = new DocumentBuilder()
     .setTitle('Cleantech auth service backend')
@@ -35,7 +35,9 @@ async function bootstrap() {
     )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/v1/auth-service/docs', app, documentFactory);
+  SwaggerModule.setup('api/v1/auth-service/docs', app, documentFactory, {
+    swaggerOptions: { persistAuthorization: true },
+  });
 
   await app.listen(4001, '0.0.0.0');
 

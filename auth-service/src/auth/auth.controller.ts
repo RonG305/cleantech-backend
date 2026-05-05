@@ -1,15 +1,16 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { CreateAuthDto, CreateUserProfileDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { LoginDto } from './dto/login-auth.dto';
 import { AuthGuard } from './auth.gurads';
 import { UpdateUserProfileDto } from './dto/update-profile.dto';
 import { GetUsersDto } from './dto/get-users.dto';
 
+@ApiBearerAuth('jwt-auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('create-user')
   create(@Body() createAuthDto: CreateAuthDto) {
@@ -23,7 +24,7 @@ export class AuthController {
   }
 
   @Post('login')
-  signIn(@Body() body : LoginDto) {
+  signIn(@Body() body: LoginDto) {
     return this.authService.signIn(body.email, body.password);
   }
 

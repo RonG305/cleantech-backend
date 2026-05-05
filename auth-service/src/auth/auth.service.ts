@@ -14,7 +14,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   private async hashPassword(password: string): Promise<string> {
     const saltRounds = 10;
@@ -69,10 +69,8 @@ export class AuthService {
     if (!limit) limit = 10;
 
     const totalUsers = await this.prisma.user.count();
-    const totalPages = Math.ceil(totalUsers / limit);
-    const url = 'users';
 
-    const pagination = paginate(totalPages, page, limit, totalUsers, url);
+    const pagination = paginate(totalUsers, page, limit);
     const users = await this.prisma.user.findMany({
       select: {
         id: true,
@@ -113,26 +111,27 @@ export class AuthService {
       ...pagination,
     };
   }
-@MessagePattern({ cmd: 'get_user_by_id' })
-async getUserById(@Payload() data: { id: string }) {
-  const user = await this.prisma.user.findUnique({
-    where: { id: data.id },
-    select: {
-      id: true,
-      email: true,
-      roles: true,
-      account_type: true,
-      company_name: true,
-      company_website: true,
-      company_registration_number: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
 
-  return user;
-}
+  @MessagePattern({ cmd: 'get_user_by_id' })
+  async getUserById(@Payload() data: { id: string }) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: data.id },
+      select: {
+        id: true,
+        email: true,
+        roles: true,
+        account_type: true,
+        company_name: true,
+        company_website: true,
+        company_registration_number: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return user;
+  }
 
   async createUserProfile(createUserProfileDto: CreateUserProfileDto) {
     const user_profile = await this.prisma.userProfile.create({
